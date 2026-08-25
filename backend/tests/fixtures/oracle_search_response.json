@@ -1,0 +1,515 @@
+{
+  "items" : [ {
+    "SearchId" : 1,
+    "Keyword" : "Python Backend Engineer",
+    "CorrectedKeyword" : null,
+    "UseExactKeywordFlag" : false,
+    "SuggestedKeyword" : null,
+    "ExecuteSpellCheckFlag" : true,
+    "Location" : null,
+    "LocationId" : null,
+    "Radius" : 0,
+    "RadiusUnit" : "MI",
+    "SelectedTitlesFacet" : null,
+    "SelectedCategoriesFacet" : null,
+    "SelectedPostingDatesFacet" : null,
+    "SelectedLocationsFacet" : null,
+    "LastSelectedFacet" : null,
+    "Facets" : "TITLES;LOCATIONS;LOCATION_LEVEL1;LOCATION_LEVEL2;LOCATION_LEVEL3;CATEGORIES;POSTING_DATES;WORK_LOCATIONS;FLEX_FIELDS;ORGANIZATIONS;WORKPLACE_TYPES",
+    "Offset" : 0,
+    "Limit" : 5,
+    "SortBy" : "RELEVANCY",
+    "TotalJobsCount" : 309,
+    "Latitude" : null,
+    "Longitude" : null,
+    "SiteNumber" : "CX_45001",
+    "JobFamilyId" : null,
+    "PostingStartDate" : null,
+    "PostingEndDate" : null,
+    "SelectedWorkLocationsFacet" : null,
+    "RequisitionId" : null,
+    "CandidateNumber" : null,
+    "WorkLocationZipCode" : null,
+    "WorkLocationCountryCode" : null,
+    "SelectedFlexFieldsFacets" : null,
+    "OrganizationId" : null,
+    "SelectedOrganizationsFacet" : null,
+    "UserTargetFacetName" : null,
+    "UserTargetFacetInputTerm" : null,
+    "HotJobFlag" : null,
+    "WorkplaceType" : null,
+    "SelectedWorkplaceTypesFacet" : null,
+    "BotQRShortCode" : null,
+    "requisitionList" : [ {
+      "Id" : "334974",
+      "Title" : "Senior AI Native Platform Engineer (Java & Python)",
+      "PostedDate" : "2026-08-19",
+      "PostingEndDate" : null,
+      "Language" : "US",
+      "PrimaryLocationCountry" : "IN",
+      "GeographyId" : 300001842985425,
+      "HotJobFlag" : false,
+      "WorkplaceTypeCode" : null,
+      "JobFamily" : null,
+      "JobFunction" : null,
+      "WorkerType" : null,
+      "ContractType" : null,
+      "ManagerLevel" : null,
+      "JobSchedule" : null,
+      "JobShift" : null,
+      "JobType" : null,
+      "StudyLevel" : null,
+      "DomesticTravelRequired" : null,
+      "InternationalTravelRequired" : null,
+      "WorkDurationYears" : null,
+      "WorkDurationMonths" : null,
+      "WorkHours" : null,
+      "WorkDays" : null,
+      "LegalEmployer" : null,
+      "BusinessUnit" : null,
+      "Department" : null,
+      "Organization" : null,
+      "BusinessUnitId" : 300001096431127,
+      "LegalEmployerId" : 300000000482027,
+      "OrganizationId" : 300001902541887,
+      "MediaThumbURL" : "https://img.youtube.com/vi/BV0GMCITXg4/hqdefault.jpg",
+      "ShortDescriptionStr" : "Oracle Health Infrastructure and Platform Services is looking for engineers with experience building cloud-native, AI-assisted platforms and systems.\nThe role combines hands-on software engineering, cloud platform development, and operational ownership. You will help turn complex or manual engineering work into safe, repeatable platform capabilities and runbooks that improve developer productivity, reliability, and customer outcomes.\nThe ideal candidate brings strong engineering fundamentals, sound judgment in mission-critical or regulated environments, and curiosity about applying emerging AI technologies responsibly in production systems.\n",
+      "PrimaryLocation" : "BENGALURU, KARNATAKA, India",
+      "Distance" : 92.92083,
+      "TrendingFlag" : true,
+      "BeFirstToApplyFlag" : false,
+      "Relevancy" : 92.92082977294922,
+      "WorkplaceType" : "",
+      "ExternalQualificationsStr" : null,
+      "ExternalResponsibilitiesStr" : null
+    }, {
+      "Id" : "336273",
+      "Title" : "Software Developer 4 (Data Engineering with Java/Python)",
+      "PostedDate" : "2026-06-18",
+      "PostingEndDate" : null,
+      "Language" : "US",
+      "PrimaryLocationCountry" : "IN",
+      "GeographyId" : 300000000106947,
+      "HotJobFlag" : false,
+      "WorkplaceTypeCode" : null,
+      "JobFamily" : null,
+      "JobFunction" : null,
+      "WorkerType" : null,
+      "ContractType" : null,
+      "ManagerLevel" : null,
+      "JobSchedule" : null,
+      "JobShift" : null,
+      "JobType" : null,
+      "StudyLevel" : null,
+      "DomesticTravelRequired" : null,
+      "InternationalTravelRequired" : null,
+      "WorkDurationYears" : null,
+      "WorkDurationMonths" : null,
+      "WorkHours" : null,
+      "WorkDays" : null,
+      "LegalEmployer" : null,
+      "BusinessUnit" : null,
+      "Department" : null,
+      "Organization" : null,
+      "BusinessUnitId" : 300001096431127,
+      "LegalEmployerId" : 300000000482027,
+      "OrganizationId" : 300001902541887,
+      "MediaThumbURL" : "https://img.youtube.com/vi/BV0GMCITXg4/hqdefault.jpg",
+      "ShortDescriptionStr" : "Design, develop, troubleshoot and debug software programs for databases, applications, tools, networks etc.",
+      "PrimaryLocation" : "India",
+      "Distance" : 56.34891,
+      "TrendingFlag" : true,
+      "BeFirstToApplyFlag" : false,
+      "Relevancy" : 56.34891128540039,
+      "WorkplaceType" : "",
+      "ExternalQualificationsStr" : null,
+      "ExternalResponsibilitiesStr" : null
+    }, {
+      "Id" : "330322",
+      "Title" : "Senior Principal Network Development Engineer (IC5) – Backend NIC Qualification & NPI (OCI AI2 – Performance & NIC Engineering)",
+      "PostedDate" : "2026-04-17",
+      "PostingEndDate" : null,
+      "Language" : "US",
+      "PrimaryLocationCountry" : "US",
+      "GeographyId" : 100000000729618,
+      "HotJobFlag" : true,
+      "WorkplaceTypeCode" : null,
+      "JobFamily" : null,
+      "JobFunction" : null,
+      "WorkerType" : null,
+      "ContractType" : null,
+      "ManagerLevel" : null,
+      "JobSchedule" : null,
+      "JobShift" : null,
+      "JobType" : null,
+      "StudyLevel" : null,
+      "DomesticTravelRequired" : null,
+      "InternationalTravelRequired" : null,
+      "WorkDurationYears" : null,
+      "WorkDurationMonths" : null,
+      "WorkHours" : null,
+      "WorkDays" : null,
+      "LegalEmployer" : null,
+      "BusinessUnit" : null,
+      "Department" : null,
+      "Organization" : null,
+      "BusinessUnitId" : 300001096431127,
+      "LegalEmployerId" : 300000000482027,
+      "OrganizationId" : 300001902541887,
+      "MediaThumbURL" : "https://img.youtube.com/vi/BV0GMCITXg4/hqdefault.jpg",
+      "ShortDescriptionStr" : "Oracle Cloud Infrastructure (OCI) AI Infrastructure is building the foundation for large-scale AI/ML workloads, requiring ultra-high performance, low-latency, and highly reliable networking at massive scale.",
+      "PrimaryLocation" : "Austin, TX, United States",
+      "Distance" : 47.748318,
+      "TrendingFlag" : true,
+      "BeFirstToApplyFlag" : false,
+      "Relevancy" : 47.74831771850586,
+      "WorkplaceType" : "",
+      "ExternalQualificationsStr" : null,
+      "ExternalResponsibilitiesStr" : null
+    }, {
+      "Id" : "337977",
+      "Title" : "Principal Backend Developer – Clinical Applications",
+      "PostedDate" : "2026-06-23",
+      "PostingEndDate" : null,
+      "Language" : "US",
+      "PrimaryLocationCountry" : "US",
+      "GeographyId" : 300000000149325,
+      "HotJobFlag" : false,
+      "WorkplaceTypeCode" : null,
+      "JobFamily" : null,
+      "JobFunction" : null,
+      "WorkerType" : null,
+      "ContractType" : null,
+      "ManagerLevel" : null,
+      "JobSchedule" : null,
+      "JobShift" : null,
+      "JobType" : null,
+      "StudyLevel" : null,
+      "DomesticTravelRequired" : null,
+      "InternationalTravelRequired" : null,
+      "WorkDurationYears" : null,
+      "WorkDurationMonths" : null,
+      "WorkHours" : null,
+      "WorkDays" : null,
+      "LegalEmployer" : null,
+      "BusinessUnit" : null,
+      "Department" : null,
+      "Organization" : null,
+      "BusinessUnitId" : 300001096431127,
+      "LegalEmployerId" : 300000000482027,
+      "OrganizationId" : 300001902541887,
+      "MediaThumbURL" : "https://img.youtube.com/vi/BV0GMCITXg4/hqdefault.jpg",
+      "ShortDescriptionStr" : "Join Oracle Health and help build the future of healthcare technology. This role focuses on developing the next generation of EHR clinical applications, including provider inbox and messaging solutions, within our cloud-native Gen2 platform. We're seeking a strong backend-focused engineer who thrives on solving complex technical challenges, leading through influence, mentoring others, and delivering scalable solutions that directly impact clinicians and patients worldwide.",
+      "PrimaryLocation" : "United States",
+      "Distance" : 47.691425,
+      "TrendingFlag" : false,
+      "BeFirstToApplyFlag" : false,
+      "Relevancy" : 47.69142532348633,
+      "WorkplaceType" : "",
+      "ExternalQualificationsStr" : null,
+      "ExternalResponsibilitiesStr" : null
+    }, {
+      "Id" : "337289",
+      "Title" : "Senior Manager, RDMA Fabric Design & Engineering",
+      "PostedDate" : "2026-06-16",
+      "PostingEndDate" : null,
+      "Language" : "US",
+      "PrimaryLocationCountry" : "US",
+      "GeographyId" : 100000000729618,
+      "HotJobFlag" : false,
+      "WorkplaceTypeCode" : null,
+      "JobFamily" : null,
+      "JobFunction" : null,
+      "WorkerType" : null,
+      "ContractType" : null,
+      "ManagerLevel" : null,
+      "JobSchedule" : null,
+      "JobShift" : null,
+      "JobType" : null,
+      "StudyLevel" : null,
+      "DomesticTravelRequired" : null,
+      "InternationalTravelRequired" : null,
+      "WorkDurationYears" : null,
+      "WorkDurationMonths" : null,
+      "WorkHours" : null,
+      "WorkDays" : null,
+      "LegalEmployer" : null,
+      "BusinessUnit" : null,
+      "Department" : null,
+      "Organization" : null,
+      "BusinessUnitId" : 300001096431127,
+      "LegalEmployerId" : 300000000482027,
+      "OrganizationId" : 300001902541887,
+      "MediaThumbURL" : "https://img.youtube.com/vi/BV0GMCITXg4/hqdefault.jpg",
+      "ShortDescriptionStr" : "Leads the design, architecture, engineering, and operational strategy for large-scale RDMA backend fabrics supporting AI, HPC, and cloud infrastructure. This role is responsible for building and scaling high-performance, low-latency network fabrics, driving end-to-end network architecture decisions, and leading teams responsible for fabric design, validation, deployment, automation, reliability, and lifecycle management. The Senior Manager partners with silicon vendors, platform engineering, systems architecture, capacity planning, and cloud infrastructure teams to deliver scalable, resilient, and future-ready networking solutions.",
+      "PrimaryLocation" : "Austin, TX, United States",
+      "Distance" : 45.50585,
+      "TrendingFlag" : false,
+      "BeFirstToApplyFlag" : false,
+      "Relevancy" : 45.50585174560547,
+      "WorkplaceType" : "",
+      "ExternalQualificationsStr" : null,
+      "ExternalResponsibilitiesStr" : null
+    } ],
+    "categoriesFacet" : [ {
+      "Id" : 302958497961752,
+      "Name" : "Product and Research",
+      "TotalCount" : 159
+    }, {
+      "Id" : 300000001917356,
+      "Name" : "Product Development",
+      "TotalCount" : 107
+    }, {
+      "Id" : 300000001917354,
+      "Name" : "Pre Sales",
+      "TotalCount" : 10
+    }, {
+      "Id" : 300000001559315,
+      "Name" : "All Roles",
+      "TotalCount" : 8
+    }, {
+      "Id" : 300000001917338,
+      "Name" : "Consulting",
+      "TotalCount" : 8
+    }, {
+      "Id" : 300000001917360,
+      "Name" : "Support",
+      "TotalCount" : 5
+    }, {
+      "Id" : 300000001917336,
+      "Name" : "Business practice and Operations",
+      "TotalCount" : 4
+    }, {
+      "Id" : 302958497961746,
+      "Name" : "Technology Operations",
+      "TotalCount" : 3
+    }, {
+      "Id" : 302958537548247,
+      "Name" : "Services and Support",
+      "TotalCount" : 3
+    }, {
+      "Id" : 300000001917350,
+      "Name" : "Manufacturing and Distribution",
+      "TotalCount" : 1
+    }, {
+      "Id" : 300009885038147,
+      "Name" : "Information Security Engineer",
+      "TotalCount" : 1
+    } ],
+    "locationsFacet" : [ {
+      "Id" : 300000000149325,
+      "Name" : "United States",
+      "TotalCount" : 219
+    }, {
+      "Id" : 100000000686062,
+      "Name" : "TN, United States",
+      "TotalCount" : 109
+    }, {
+      "Id" : 100000000726870,
+      "Name" : "Nashville, TN, United States",
+      "TotalCount" : 109
+    }, {
+      "Id" : 100000000686063,
+      "Name" : "TX, United States",
+      "TotalCount" : 65
+    }, {
+      "Id" : 100000000729618,
+      "Name" : "Austin, TX, United States",
+      "TotalCount" : 63
+    }, {
+      "Id" : 300000000106947,
+      "Name" : "India",
+      "TotalCount" : 49
+    }, {
+      "Id" : 300001842984480,
+      "Name" : "KARNATAKA, India",
+      "TotalCount" : 43
+    }, {
+      "Id" : 300001842985425,
+      "Name" : "BENGALURU, KARNATAKA, India",
+      "TotalCount" : 43
+    }, {
+      "Id" : 100000000686067,
+      "Name" : "WA, United States",
+      "TotalCount" : 33
+    }, {
+      "Id" : 100000000731910,
+      "Name" : "Seattle, WA, United States",
+      "TotalCount" : 33
+    }, {
+      "Id" : 100000579040474,
+      "Name" : "CA, United States",
+      "TotalCount" : 27
+    }, {
+      "Id" : 100000579041779,
+      "Name" : "Santa Clara, CA, United States",
+      "TotalCount" : 21
+    }, {
+      "Id" : 100000000686066,
+      "Name" : "VA, United States",
+      "TotalCount" : 16
+    }, {
+      "Id" : 100000000730814,
+      "Name" : "Reston, VA, United States",
+      "TotalCount" : 14
+    }, {
+      "Id" : 300001842984495,
+      "Name" : "TELANGANA, India",
+      "TotalCount" : 13
+    }, {
+      "Id" : 300001842985230,
+      "Name" : "HYDERABAD, TELANGANA, India",
+      "TotalCount" : 13
+    }, {
+      "Id" : 300000000106863,
+      "Name" : "United Kingdom",
+      "TotalCount" : 12
+    }, {
+      "Id" : 100000579041727,
+      "Name" : "Redwood City, CA, United States",
+      "TotalCount" : 7
+    } ],
+    "postingDatesFacet" : [ {
+      "Id" : 7,
+      "Name" : "Less than 7 days",
+      "TotalCount" : 18
+    }, {
+      "Id" : 30,
+      "Name" : "Less than 30 days",
+      "TotalCount" : 111
+    }, {
+      "Id" : 31,
+      "Name" : "Greater than 30 days",
+      "TotalCount" : 198
+    } ],
+    "titlesFacet" : [ {
+      "Id" : "PRODEV-SWENG",
+      "Name" : "PRODEV-SWENG",
+      "TotalCount" : 94
+    }, {
+      "Id" : "SWE",
+      "Name" : "Software Engineering",
+      "TotalCount" : 93
+    }, {
+      "Id" : "ENGSERV",
+      "Name" : "Engineering Services",
+      "TotalCount" : 48
+    }, {
+      "Id" : "PRODEV-ENGSVCS",
+      "Name" : "PRODEV-ENGSVCS",
+      "TotalCount" : 13
+    }, {
+      "Id" : "PRESALES-PRODTECH",
+      "Name" : "PRESALES-PRODTECH",
+      "TotalCount" : 10
+    }, {
+      "Id" : "ALLROLES-ALLSPECAEA",
+      "Name" : "ALLROLES-ALLSPECAEA",
+      "TotalCount" : 8
+    }, {
+      "Id" : "CONS-IMPDEL",
+      "Name" : "CONS-IMPDEL",
+      "TotalCount" : 8
+    }, {
+      "Id" : "DASCI",
+      "Name" : "Data and Applied Science",
+      "TotalCount" : 7
+    }, {
+      "Id" : "SUPP-PRODSUPP",
+      "Name" : "SUPP-PRODSUPP",
+      "TotalCount" : 5
+    }, {
+      "Id" : "BUSPRAC-BUSPRAC",
+      "Name" : "BUSPRAC-BUSPRAC",
+      "TotalCount" : 4
+    }, {
+      "Id" : "HWENG",
+      "Name" : "Hardware Engineering",
+      "TotalCount" : 3
+    }, {
+      "Id" : "INFOSEC",
+      "Name" : "Information Security",
+      "TotalCount" : 3
+    }, {
+      "Id" : "NETENG",
+      "Name" : "Network Engineering",
+      "TotalCount" : 3
+    }, {
+      "Id" : "CUSTMGMT",
+      "Name" : "Customer Account Management",
+      "TotalCount" : 2
+    }, {
+      "Id" : "PRODMGMT",
+      "Name" : "Product Management",
+      "TotalCount" : 2
+    }, {
+      "Id" : "PRODSYS",
+      "Name" : "Production System Administration",
+      "TotalCount" : 2
+    }, {
+      "Id" : "DCOPS",
+      "Name" : "Data Center Operations",
+      "TotalCount" : 1
+    }, {
+      "Id" : "INFSECENG-INFSECENG",
+      "Name" : "INFSECENG-INFSECENG",
+      "TotalCount" : 1
+    } ],
+    "workLocationsFacet" : [ ],
+    "flexFieldsFacet" : [ {
+      "Name" : "AttributeChar29",
+      "Label" : "Role"
+    }, {
+      "Name" : "AttributeChar4",
+      "Label" : "Job Type"
+    }, {
+      "Name" : "AttributeChar13",
+      "Label" : "Experience Level"
+    }, {
+      "Name" : "AttributeChar15",
+      "Label" : "Line of Business"
+    }, {
+      "Name" : "AttributeChar6",
+      "Label" : "Years"
+    }, {
+      "Name" : "AttributeChar12",
+      "Label" : "Applicants"
+    }, {
+      "Name" : "AttributeChar16",
+      "Label" : "Tag"
+    }, {
+      "Name" : "AttributeChar14",
+      "Label" : "Tag2"
+    } ],
+    "organizationsFacet" : [ {
+      "Id" : 300001902541887,
+      "Name" : "CLBPTS - All Lines of Business",
+      "TotalCount" : 309
+    } ],
+    "workplaceTypesFacet" : [ {
+      "Id" : "ORA_ON_SITE",
+      "Name" : "On-site",
+      "TotalCount" : 309
+    } ]
+  } ],
+  "count" : 1,
+  "hasMore" : false,
+  "limit" : 200,
+  "offset" : 0,
+  "links" : [ {
+    "rel" : "self",
+    "href" : "https://eeho.fa.us2.oraclecloud.com:443/hcmRestApi/resources/11.13.18.05/recruitingCEJobRequisitions",
+    "name" : "recruitingCEJobRequisitions",
+    "kind" : "collection"
+  }, {
+    "rel" : "action",
+    "href" : "https://eeho.fa.us2.oraclecloud.com:443/hcmRestApi/resources/11.13.18.05/recruitingCEJobRequisitions/action/getRequisitionsLocationCoordinates",
+    "name" : "getRequisitionsLocationCoordinates",
+    "kind" : "other"
+  }, {
+    "rel" : "action",
+    "href" : "https://eeho.fa.us2.oraclecloud.com:443/hcmRestApi/resources/11.13.18.05/recruitingCEJobRequisitions/action/getRequisitionDetailsForMap",
+    "name" : "getRequisitionDetailsForMap",
+    "kind" : "other"
+  } ]
+}
