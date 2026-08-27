@@ -1,4 +1,5 @@
 from collections.abc import Iterator
+from pathlib import Path
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
@@ -8,8 +9,9 @@ from app.db.models import Base
 
 
 def make_engine(database_path: str):
-    connect_args = {"check_same_thread": False} if database_path != ":memory:" else {"check_same_thread": False}
-    engine = create_engine(f"sqlite:///{database_path}", connect_args=connect_args)
+    if database_path != ":memory:":
+        Path(database_path).parent.mkdir(parents=True, exist_ok=True)
+    engine = create_engine(f"sqlite:///{database_path}", connect_args={"check_same_thread": False})
     Base.metadata.create_all(engine)
     return engine
 
