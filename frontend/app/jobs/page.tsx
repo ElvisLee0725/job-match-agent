@@ -66,8 +66,9 @@ export default function JobsPage() {
       <div>
         <h1 className="text-2xl font-semibold">Search open roles</h1>
         <p className="mt-2 text-neutral-600 dark:text-neutral-400 text-sm">
-          Search a company&apos;s current open roles using your uploaded profile, or paste a
-          specific job posting link (e.g. from LinkedIn) to add it directly.
+          Search a company&apos;s current open roles using your uploaded profile — works for
+          Oracle, plus any company on Greenhouse or Lever. You can also paste a specific
+          job posting link (e.g. from LinkedIn) to add it directly.
         </p>
       </div>
 

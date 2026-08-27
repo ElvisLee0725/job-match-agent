@@ -1,0 +1,23 @@
+[
+  {
+    "id": "ac978161-6f46-4f6b-ad9e-a258e642751c",
+    "text": "Administrative Business Partner",
+    "hostedUrl": "https://jobs.lever.co/example/ac978161",
+    "categories": { "location": "Palo Alto" },
+    "descriptionPlain": "Support the leadership team with scheduling and operations."
+  },
+  {
+    "id": "b1111111-1111-1111-1111-111111111111",
+    "text": "Senior Backend Software Engineer",
+    "hostedUrl": "https://jobs.lever.co/example/b1111111",
+    "categories": { "location": "New York" },
+    "descriptionPlain": "Build distributed backend systems handling large-scale data pipelines."
+  },
+  {
+    "id": "c2222222-2222-2222-2222-222222222222",
+    "text": "Product Designer",
+    "hostedUrl": "https://jobs.lever.co/example/c2222222",
+    "categories": { "location": "Remote" },
+    "descriptionPlain": "Design intuitive interfaces for our platform."
+  }
+]

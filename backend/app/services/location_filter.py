@@ -1,3 +1,5 @@
+import re
+
 _US_STATE_ABBREVIATIONS = {
     "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN",
     "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV",
@@ -5,21 +7,30 @@ _US_STATE_ABBREVIATIONS = {
     "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY", "DC",
 }
 
+# Different job boards format US locations very differently: Oracle spells out
+# "United States", Greenhouse/Lever often just say "US" or "US / Canada", or give only a
+# bare state abbreviation ("Seattle, WA") with no country at all. Match all of them via
+# word-boundary regexes rather than a single literal substring, so this works across
+# platforms — not just the one it was originally written against.
+_US_TOKEN_PATTERN = re.compile(r"\b(?:US|USA)\b")
+_STATE_PATTERN = re.compile(r"\b(" + "|".join(sorted(_US_STATE_ABBREVIATIONS)) + r")\b")
+
 
 def is_us_location(location: str | None) -> bool:
     if not location:
         return False
-    return "united states" in location.lower()
+    if "united states" in location.lower():
+        return True
+    if _US_TOKEN_PATTERN.search(location):
+        return True
+    return bool(_STATE_PATTERN.search(location.upper()))
 
 
 def extract_state_abbreviation(location: str | None) -> str | None:
     if not location:
         return None
-    for part in location.split(","):
-        token = part.strip().upper()
-        if token in _US_STATE_ABBREVIATIONS:
-            return token
-    return None
+    match = _STATE_PATTERN.search(location.upper())
+    return match.group(1) if match else None
 
 
 def passes_location_filter(

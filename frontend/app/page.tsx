@@ -55,7 +55,8 @@ export default function OverviewPage() {
       <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 p-4">
         <h2 className="font-medium mb-2">2. Search a company&apos;s open roles</h2>
         <p className="text-sm text-neutral-600 dark:text-neutral-400">
-          Currently supported: Oracle. You can also paste a link to any specific job posting.
+          Works for Oracle, plus any company on Greenhouse or Lever — just type their
+          name. You can also paste a link to any specific job posting.
         </p>
         <Link href="/jobs" className="underline text-sm">
           Go to Jobs

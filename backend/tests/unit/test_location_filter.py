@@ -12,10 +12,21 @@ def test_is_us_location():
     assert is_us_location(None) is False
 
 
+def test_is_us_location_handles_non_oracle_formats():
+    # Greenhouse/Lever don't spell out "United States" the way Oracle does
+    assert is_us_location("US") is True
+    assert is_us_location("US / Canada") is True
+    assert is_us_location("Seattle, WA") is True
+    assert is_us_location("South San Francisco, CA ") is True
+    assert is_us_location("London, United Kingdom") is False
+
+
 def test_extract_state_abbreviation():
     assert extract_state_abbreviation("Nashville, TN, United States") == "TN"
     assert extract_state_abbreviation("United States") is None
     assert extract_state_abbreviation("BENGALURU, KARNATAKA, India") is None
+    assert extract_state_abbreviation("Seattle, WA") == "WA"
+    assert extract_state_abbreviation("India") is None  # "IN" must not match inside "INDIA"
 
 
 def test_passes_location_filter_excludes_non_us_when_us_only():

@@ -1,0 +1,25 @@
+{
+  "jobs": [
+    {
+      "id": 7532733,
+      "title": "Account Executive, AI Sales",
+      "absolute_url": "https://stripe.com/jobs/search?gh_jid=7532733",
+      "location": { "name": "San Francisco, CA" },
+      "updated_at": "2026-08-01T00:00:00-05:00"
+    },
+    {
+      "id": 7500001,
+      "title": "Senior Backend Engineer, Payments",
+      "absolute_url": "https://stripe.com/jobs/search?gh_jid=7500001",
+      "location": { "name": "Remote - US" },
+      "updated_at": "2026-08-02T00:00:00-05:00"
+    },
+    {
+      "id": 7500002,
+      "title": "Data Scientist, Risk",
+      "absolute_url": "https://stripe.com/jobs/search?gh_jid=7500002",
+      "location": { "name": "New York, NY" },
+      "updated_at": "2026-08-03T00:00:00-05:00"
+    }
+  ]
+}

@@ -2,20 +2,14 @@ import re
 from urllib.parse import quote
 
 import httpx
-from bs4 import BeautifulSoup
 
 from app.models.job import ParsedJobPosting
 from app.sources.base import JobSource
+from app.sources.html_utils import strip_html
 
 _BASE_API_URL = "https://eeho.fa.us2.oraclecloud.com/hcmRestApi/resources/latest"
 _SITE_NUMBER = "CX_45001"
 _JOB_URL_TEMPLATE = "https://careers.oracle.com/en/sites/jobsearch/job/{id}"
-
-
-def _strip_html(html: str | None) -> str:
-    if not html:
-        return ""
-    return BeautifulSoup(html, "lxml").get_text(separator="\n").strip()
 
 
 def _sanitize_keyword(query: str) -> str:
@@ -56,7 +50,7 @@ class OracleJobSource(JobSource):
                     external_id=job_id,
                     title=req.get("Title", ""),
                     location=req.get("PrimaryLocation"),
-                    raw_description=_strip_html(req.get("ShortDescriptionStr")),
+                    raw_description=strip_html(req.get("ShortDescriptionStr")),
                 )
             )
         return postings
@@ -70,4 +64,4 @@ class OracleJobSource(JobSource):
         data = response.json()
         if not data.get("items"):
             raise ValueError(f"No job details found for Oracle requisition id {external_id!r}")
-        return _strip_html(data["items"][0].get("ExternalDescriptionStr"))
+        return strip_html(data["items"][0].get("ExternalDescriptionStr"))
