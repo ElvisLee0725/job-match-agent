@@ -27,6 +27,7 @@ export default function ProfilePage() {
   const [error, setError] = useState<string | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [savingPrefs, setSavingPrefs] = useState(false);
+  const [prefsSaved, setPrefsSaved] = useState(false);
   const [prefsError, setPrefsError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -71,12 +72,24 @@ export default function ProfilePage() {
   async function handleSaveLocationPrefs() {
     setSavingPrefs(true);
     setPrefsError(null);
+    setPrefsSaved(false);
+    const startedAt = Date.now();
     try {
       const result = await updateProfile({
         us_only: usOnly,
         preferred_states: parseStatesText(preferredStatesText),
       });
+      // This save has no LLM call, so it can finish in well under 100ms — too fast to
+      // register as "Saving..." even flashed on screen, which reads as the click doing
+      // nothing. Hold the loading state for a minimum stretch so it's actually visible.
+      const minVisibleMs = 400;
+      const elapsed = Date.now() - startedAt;
+      if (elapsed < minVisibleMs) {
+        await new Promise((resolve) => setTimeout(resolve, minVisibleMs - elapsed));
+      }
       setProfile(result);
+      setPrefsSaved(true);
+      setTimeout(() => setPrefsSaved(false), 2000);
     } catch (err) {
       setPrefsError(err instanceof ApiError ? err.message : "Something went wrong.");
     } finally {
@@ -216,9 +229,9 @@ export default function ProfilePage() {
             type="button"
             onClick={handleSaveLocationPrefs}
             disabled={savingPrefs}
-            className="self-start rounded border border-neutral-300 dark:border-neutral-700 px-4 py-2 text-sm font-medium disabled:opacity-50"
+            className="self-start rounded bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 px-4 py-2 text-sm font-medium disabled:opacity-50"
           >
-            {savingPrefs ? "Saving..." : "Save location preferences"}
+            {savingPrefs ? "Saving..." : prefsSaved ? "Saved ✓" : "Save location preferences"}
           </button>
         )}
         {!profile && (
