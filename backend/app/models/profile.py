@@ -19,6 +19,7 @@ class ProfileResponse(BaseModel):
     structured_profile: StructuredProfile
     us_only: bool
     preferred_states: list[str]
+    excluded_title_keywords: list[str]
     created_at: datetime
     updated_at: datetime
 
@@ -28,3 +29,4 @@ class ProfileUpdateRequest(BaseModel):
     behavioral_answers: list[str] | None = None
     us_only: bool | None = None
     preferred_states: list[str] | None = None
+    excluded_title_keywords: list[str] | None = None

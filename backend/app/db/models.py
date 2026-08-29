@@ -22,6 +22,7 @@ class Profile(Base):
     structured_json: Mapped[str] = mapped_column(Text, default="{}")
     us_only: Mapped[bool] = mapped_column(Boolean, default=True)
     preferred_states_json: Mapped[str] = mapped_column(Text, default="[]")
+    excluded_title_keywords_json: Mapped[str] = mapped_column(Text, default="[]")
     created_at: Mapped[datetime] = mapped_column(DateTime, default=_utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=_utcnow, onupdate=_utcnow)
 

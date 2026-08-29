@@ -16,6 +16,13 @@ function parseStatesText(text: string): string[] {
     .filter(Boolean);
 }
 
+function parseKeywordsText(text: string): string[] {
+  return text
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
 const inputClass =
   "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm placeholder:text-muted/70 focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent transition-colors";
 const primaryButtonClass =
@@ -29,6 +36,7 @@ export default function ProfilePage() {
   const [behavioralAnswers, setBehavioralAnswers] = useState<string[]>([""]);
   const [usOnly, setUsOnly] = useState(true);
   const [preferredStatesText, setPreferredStatesText] = useState("");
+  const [excludedTitlesText, setExcludedTitlesText] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loaded, setLoaded] = useState(false);
@@ -45,6 +53,7 @@ export default function ProfilePage() {
           setBehavioralAnswers(p.behavioral_answers.length ? p.behavioral_answers : [""]);
           setUsOnly(p.us_only);
           setPreferredStatesText(p.preferred_states.join(", "));
+          setExcludedTitlesText(p.excluded_title_keywords.join(", "));
         }
       })
       .finally(() => setLoaded(true));
@@ -65,7 +74,8 @@ export default function ProfilePage() {
         backgroundText,
         answers,
         usOnly,
-        parseStatesText(preferredStatesText)
+        parseStatesText(preferredStatesText),
+        parseKeywordsText(excludedTitlesText)
       );
       setProfile(result);
     } catch (err) {
@@ -84,6 +94,7 @@ export default function ProfilePage() {
       const result = await updateProfile({
         us_only: usOnly,
         preferred_states: parseStatesText(preferredStatesText),
+        excluded_title_keywords: parseKeywordsText(excludedTitlesText),
       });
       // This save has no LLM call, so it can finish in well under 100ms — too fast to
       // register as "Saving..." even flashed on screen, which reads as the click doing
@@ -201,9 +212,10 @@ export default function ProfilePage() {
       </form>
 
       <div className={cardClass}>
-        <h2 className="font-medium text-sm">Location preferences</h2>
+        <h2 className="font-medium text-sm">Match preferences</h2>
         <p className="text-sm text-muted">
-          Matches outside these preferences are excluded before ranking, not just deprioritized.
+          These are excluded before ranking, not just deprioritized — the LLM never even sees
+          a filtered-out posting.
         </p>
         <label className="flex items-center gap-2 text-sm">
           <input
@@ -226,6 +238,18 @@ export default function ProfilePage() {
             className={inputClass}
           />
         </div>
+        <div>
+          <label className="block text-sm font-medium mb-1" htmlFor="excluded_title_keywords">
+            Exclude titles containing (comma-separated, e.g. Principal, Director — leave blank for none)
+          </label>
+          <input
+            id="excluded_title_keywords"
+            value={excludedTitlesText}
+            onChange={(e) => setExcludedTitlesText(e.target.value)}
+            placeholder="Principal, Director"
+            className={inputClass}
+          />
+        </div>
         {prefsError && <p className="text-sm text-danger">{prefsError}</p>}
         {profile && (
           <button
@@ -234,7 +258,7 @@ export default function ProfilePage() {
             disabled={savingPrefs}
             className={primaryButtonClass}
           >
-            {savingPrefs ? "Saving..." : prefsSaved ? "Saved ✓" : "Save location preferences"}
+            {savingPrefs ? "Saving..." : prefsSaved ? "Saved ✓" : "Save match preferences"}
           </button>
         )}
         {!profile && (

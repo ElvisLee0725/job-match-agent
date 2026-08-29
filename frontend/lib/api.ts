@@ -16,6 +16,7 @@ export interface ProfileResponse {
   structured_profile: StructuredProfile;
   us_only: boolean;
   preferred_states: string[];
+  excluded_title_keywords: string[];
   created_at: string;
   updated_at: string;
 }
@@ -96,7 +97,8 @@ export async function uploadProfile(
   backgroundText: string,
   behavioralAnswers: string[],
   usOnly: boolean = true,
-  preferredStates: string[] = []
+  preferredStates: string[] = [],
+  excludedTitleKeywords: string[] = []
 ): Promise<ProfileResponse> {
   const formData = new FormData();
   formData.append("resume_file", resumeFile);
@@ -107,6 +109,9 @@ export async function uploadProfile(
   formData.append("us_only", String(usOnly));
   for (const state of preferredStates) {
     formData.append("preferred_states", state);
+  }
+  for (const keyword of excludedTitleKeywords) {
+    formData.append("excluded_title_keywords", keyword);
   }
   return request<ProfileResponse>("/api/profile/upload", {
     method: "POST",
@@ -119,6 +124,7 @@ export async function updateProfile(payload: {
   behavioral_answers?: string[];
   us_only?: boolean;
   preferred_states?: string[];
+  excluded_title_keywords?: string[];
 }): Promise<ProfileResponse> {
   return request<ProfileResponse>("/api/profile", {
     method: "PUT",

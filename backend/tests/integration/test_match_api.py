@@ -45,6 +45,15 @@ class _FakeOracleSource:
                 location="Nashville, TN, United States",
                 raw_description="Build APIs from Nashville.",
             ),
+            ParsedJobPosting(
+                company="oracle",
+                source_type="scraped",
+                source_url="https://careers.oracle.com/en/sites/jobsearch/job/5",
+                external_id="5",
+                title="Principal Backend Engineer",
+                location="United States",
+                raw_description="Lead backend architecture decisions.",
+            ),
         ]
 
     def fetch_full_description(self, external_id):
@@ -150,6 +159,45 @@ def test_run_match_excludes_postings_outside_preferred_states(client, monkeypatc
     assert "Backend Engineer (Nashville)" not in titles  # TN, not in preferred states
     assert "Backend Engineer" in titles  # Austin, TX — matches preferred state
     assert "Data Scientist" in titles  # unqualified "United States" — kept, not assumed to need relocation
+
+
+def test_run_match_excludes_postings_matching_excluded_title_keywords(client, monkeypatch):
+    _seed_profile(client, monkeypatch)
+    _seed_jobs(client, monkeypatch)
+
+    client.put("/api/profile", json={"excluded_title_keywords": ["Principal"]})
+
+    seen_candidates = []
+
+    def _capture_rank_top_matches(profile, candidates, top_n=3):
+        seen_candidates.extend(candidates)
+        return []
+
+    monkeypatch.setattr(match_router, "rank_top_matches", _capture_rank_top_matches)
+
+    client.post("/api/match/run", json={"company_name": "oracle"})
+
+    titles = {c.title for c in seen_candidates}
+    assert "Principal Backend Engineer" not in titles
+    assert "Backend Engineer" in titles  # unaffected by the exclusion
+
+
+def test_run_match_includes_principal_title_when_no_exclusion_set(client, monkeypatch):
+    _seed_profile(client, monkeypatch)
+    _seed_jobs(client, monkeypatch)
+
+    seen_candidates = []
+
+    def _capture_rank_top_matches(profile, candidates, top_n=3):
+        seen_candidates.extend(candidates)
+        return []
+
+    monkeypatch.setattr(match_router, "rank_top_matches", _capture_rank_top_matches)
+
+    client.post("/api/match/run", json={"company_name": "oracle"})
+
+    titles = {c.title for c in seen_candidates}
+    assert "Principal Backend Engineer" in titles
 
 
 def test_run_match_returns_400_when_all_postings_filtered_out_by_location(client, monkeypatch):

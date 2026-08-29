@@ -21,6 +21,7 @@ def _to_response(profile: Profile) -> ProfileResponse:
         structured_profile=StructuredProfile.model_validate_json(profile.structured_json),
         us_only=profile.us_only,
         preferred_states=json.loads(profile.preferred_states_json),
+        excluded_title_keywords=json.loads(profile.excluded_title_keywords_json),
         created_at=profile.created_at,
         updated_at=profile.updated_at,
     )
@@ -33,6 +34,7 @@ def upload_profile(
     behavioral_answers: list[str] = Form([]),
     us_only: bool = Form(True),
     preferred_states: list[str] = Form([]),
+    excluded_title_keywords: list[str] = Form([]),
     db: Session = Depends(get_db),
 ) -> ProfileResponse:
     file_bytes = resume_file.file.read()
@@ -54,6 +56,7 @@ def upload_profile(
     profile.structured_json = structured.model_dump_json()
     profile.us_only = us_only
     profile.preferred_states_json = json.dumps(preferred_states)
+    profile.excluded_title_keywords_json = json.dumps(excluded_title_keywords)
     db.commit()
     db.refresh(profile)
 
@@ -85,6 +88,8 @@ def update_profile(payload: ProfileUpdateRequest, db: Session = Depends(get_db))
         profile.us_only = payload.us_only
     if payload.preferred_states is not None:
         profile.preferred_states_json = json.dumps(payload.preferred_states)
+    if payload.excluded_title_keywords is not None:
+        profile.excluded_title_keywords_json = json.dumps(payload.excluded_title_keywords)
 
     if needs_restructure:
         structured = build_structured_profile(

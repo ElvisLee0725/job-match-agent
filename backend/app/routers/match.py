@@ -9,6 +9,7 @@ from app.models.match import MatchPickResponse, MatchRunRequest, MatchRunRespons
 from app.models.profile import StructuredProfile
 from app.services.location_filter import passes_location_filter
 from app.services.matching import JobCandidate, rank_top_matches
+from app.services.title_filter import passes_title_filter
 
 router = APIRouter(prefix="/api/match", tags=["match"])
 
@@ -29,18 +30,20 @@ def run_match(payload: MatchRunRequest, db: Session = Depends(get_db)) -> MatchR
         )
 
     preferred_states = json.loads(profile.preferred_states_json)
+    excluded_title_keywords = json.loads(profile.excluded_title_keywords_json)
     postings = [
         p
         for p in all_postings
         if passes_location_filter(
             p.location, us_only=profile.us_only, preferred_states=preferred_states
         )
+        and passes_title_filter(p.title, excluded_title_keywords)
     ]
     if not postings:
         raise HTTPException(
             status_code=400,
             detail=f"None of the {len(all_postings)} cached postings for '{company}' match "
-            "your location preferences — try broadening them or searching again.",
+            "your location and title preferences — try broadening them or searching again.",
         )
 
     structured_profile = StructuredProfile.model_validate_json(profile.structured_json)
