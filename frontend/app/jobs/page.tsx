@@ -9,6 +9,14 @@ import {
   type JobPostingResponse,
 } from "@/lib/api";
 
+const inputClass =
+  "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm placeholder:text-muted/70 focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent transition-colors";
+const primaryButtonClass =
+  "rounded-lg bg-accent text-accent-foreground px-4 py-2 text-sm font-medium hover:bg-accent-hover transition-colors disabled:opacity-50 disabled:hover:bg-accent";
+const secondaryButtonClass =
+  "rounded-lg border border-border-strong px-4 py-2 text-sm font-medium hover:bg-surface-hover transition-colors disabled:opacity-50";
+const cardClass = "rounded-xl border border-border bg-surface p-5";
+
 export default function JobsPage() {
   const [company, setCompany] = useState("oracle");
   const [postings, setPostings] = useState<JobPostingResponse[]>([]);
@@ -64,8 +72,8 @@ export default function JobsPage() {
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h1 className="text-2xl font-semibold">Search open roles</h1>
-        <p className="mt-2 text-neutral-600 dark:text-neutral-400 text-sm">
+        <h1 className="text-3xl font-semibold tracking-tight">Search open roles</h1>
+        <p className="mt-3 text-muted text-sm max-w-xl">
           Search a company&apos;s current open roles using your uploaded profile — works for
           Oracle, plus any company on Greenhouse or Lever. You can also paste a specific
           job posting link (e.g. from LinkedIn) to add it directly.
@@ -81,26 +89,22 @@ export default function JobsPage() {
             id="company"
             value={company}
             onChange={(e) => setCompany(e.target.value)}
-            className="w-full rounded border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+            className={inputClass}
           />
         </div>
-        <button
-          type="submit"
-          disabled={searching}
-          className="rounded bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 px-4 py-2 text-sm font-medium disabled:opacity-50"
-        >
+        <button type="submit" disabled={searching} className={primaryButtonClass}>
           {searching ? "Searching..." : "Search"}
         </button>
       </form>
-      {searchError && <p className="text-sm text-red-600 -mt-4">{searchError}</p>}
+      {searchError && <p className="text-sm text-danger -mt-4">{searchError}</p>}
 
-      <form onSubmit={handlePasteUrl} className="rounded-lg border border-neutral-200 dark:border-neutral-800 p-4 flex flex-col gap-3">
+      <form onSubmit={handlePasteUrl} className={`${cardClass} flex flex-col gap-3`}>
         <h2 className="font-medium text-sm">Paste a specific job posting URL</h2>
         <input
           value={pasteUrl}
           onChange={(e) => setPasteUrl(e.target.value)}
           placeholder="https://www.linkedin.com/jobs/view/..."
-          className="w-full rounded border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+          className={inputClass}
         />
         <div className="flex gap-2 items-end">
           <div className="flex-1">
@@ -108,40 +112,33 @@ export default function JobsPage() {
               value={pasteCompany}
               onChange={(e) => setPasteCompany(e.target.value)}
               placeholder="Company name (e.g. oracle)"
-              className="w-full rounded border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+              className={inputClass}
             />
           </div>
-          <button
-            type="submit"
-            disabled={pasting}
-            className="rounded border border-neutral-300 dark:border-neutral-700 px-4 py-2 text-sm font-medium disabled:opacity-50"
-          >
+          <button type="submit" disabled={pasting} className={secondaryButtonClass}>
             {pasting ? "Parsing..." : "Add posting"}
           </button>
         </div>
-        {pasteError && <p className="text-sm text-red-600">{pasteError}</p>}
+        {pasteError && <p className="text-sm text-danger">{pasteError}</p>}
       </form>
 
       <div>
-        <h2 className="font-medium mb-3">
+        <h2 className="font-medium mb-3 text-sm text-muted">
           {postings.length} cached posting{postings.length === 1 ? "" : "s"} for &quot;{company}&quot;
         </h2>
         <ul className="flex flex-col gap-3">
           {postings.map((posting) => (
-            <li
-              key={posting.id}
-              className="rounded-lg border border-neutral-200 dark:border-neutral-800 p-4"
-            >
+            <li key={posting.id} className={`${cardClass} hover:border-border-strong transition-colors`}>
               <a
                 href={posting.source_url}
                 target="_blank"
                 rel="noreferrer"
-                className="font-medium underline"
+                className="font-medium text-accent hover:text-accent-hover transition-colors"
               >
                 {posting.title}
               </a>
-              <p className="text-sm text-neutral-500">{posting.location ?? "Location not specified"}</p>
-              <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-3">
+              <p className="text-sm text-muted mt-0.5">{posting.location ?? "Location not specified"}</p>
+              <p className="text-sm text-muted mt-2 line-clamp-3">
                 {posting.raw_description}
               </p>
             </li>

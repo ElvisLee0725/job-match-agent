@@ -16,6 +16,12 @@ function parseStatesText(text: string): string[] {
     .filter(Boolean);
 }
 
+const inputClass =
+  "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm placeholder:text-muted/70 focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent transition-colors";
+const primaryButtonClass =
+  "self-start rounded-lg bg-accent text-accent-foreground px-4 py-2 text-sm font-medium hover:bg-accent-hover transition-colors disabled:opacity-50 disabled:hover:bg-accent";
+const cardClass = "rounded-xl border border-border bg-surface p-5 flex flex-col gap-3";
+
 export default function ProfilePage() {
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
   const [resumeFile, setResumeFile] = useState<File | null>(null);
@@ -110,21 +116,21 @@ export default function ProfilePage() {
   }
 
   if (!loaded) {
-    return <p className="text-sm text-neutral-500">Loading...</p>;
+    return <p className="text-sm text-muted">Loading...</p>;
   }
 
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h1 className="text-2xl font-semibold">Your profile</h1>
-        <p className="mt-2 text-neutral-600 dark:text-neutral-400 text-sm">
+        <h1 className="text-3xl font-semibold tracking-tight">Your profile</h1>
+        <p className="mt-3 text-muted text-sm">
           {profile
             ? "Uploading a new resume will replace what's stored now."
             : "Upload your resume plus any background notes so we can match you against open roles."}
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+      <form onSubmit={handleSubmit} className={`${cardClass} gap-5`}>
         <div>
           <label className="block text-sm font-medium mb-1" htmlFor="resume_file">
             Resume (.pdf or .txt)
@@ -134,7 +140,7 @@ export default function ProfilePage() {
             type="file"
             accept=".pdf,.txt"
             onChange={(e) => setResumeFile(e.target.files?.[0] ?? null)}
-            className="block w-full text-sm file:mr-3 file:rounded file:border-0 file:bg-neutral-900 file:text-white file:px-3 file:py-1.5 dark:file:bg-neutral-100 dark:file:text-neutral-900"
+            className="block w-full text-sm text-muted file:mr-3 file:rounded-lg file:border-0 file:bg-accent file:text-accent-foreground file:px-3 file:py-1.5 file:text-sm file:font-medium hover:file:bg-accent-hover file:transition-colors file:cursor-pointer"
           />
         </div>
 
@@ -148,7 +154,7 @@ export default function ProfilePage() {
             value={backgroundText}
             onChange={(e) => setBackgroundText(e.target.value)}
             placeholder="e.g. Looking for senior backend roles at large tech companies, open to relocation."
-            className="w-full rounded border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+            className={inputClass}
           />
         </div>
 
@@ -164,13 +170,13 @@ export default function ProfilePage() {
                   value={answer}
                   onChange={(e) => updateAnswer(i, e.target.value)}
                   placeholder="e.g. Tell me about a conflict with a teammate..."
-                  className="flex-1 rounded border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+                  className={`flex-1 ${inputClass}`}
                 />
                 {behavioralAnswers.length > 1 && (
                   <button
                     type="button"
                     onClick={() => removeAnswer(i)}
-                    className="text-sm text-neutral-500 hover:text-red-600"
+                    className="text-sm text-muted hover:text-danger transition-colors"
                   >
                     Remove
                   </button>
@@ -181,26 +187,22 @@ export default function ProfilePage() {
           <button
             type="button"
             onClick={addAnswer}
-            className="mt-2 text-sm underline text-neutral-600 dark:text-neutral-400"
+            className="mt-2 text-sm text-accent hover:text-accent-hover transition-colors"
           >
             + Add another answer
           </button>
         </div>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="text-sm text-danger">{error}</p>}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="self-start rounded bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 px-4 py-2 text-sm font-medium disabled:opacity-50"
-        >
+        <button type="submit" disabled={loading} className={primaryButtonClass}>
           {loading ? "Uploading..." : profile ? "Update profile" : "Upload profile"}
         </button>
       </form>
 
-      <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 p-4 flex flex-col gap-3">
+      <div className={cardClass}>
         <h2 className="font-medium text-sm">Location preferences</h2>
-        <p className="text-sm text-neutral-600 dark:text-neutral-400">
+        <p className="text-sm text-muted">
           Matches outside these preferences are excluded before ranking, not just deprioritized.
         </p>
         <label className="flex items-center gap-2 text-sm">
@@ -208,6 +210,7 @@ export default function ProfilePage() {
             type="checkbox"
             checked={usOnly}
             onChange={(e) => setUsOnly(e.target.checked)}
+            className="accent-accent h-4 w-4"
           />
           US roles only
         </label>
@@ -220,49 +223,49 @@ export default function ProfilePage() {
             value={preferredStatesText}
             onChange={(e) => setPreferredStatesText(e.target.value)}
             placeholder="CA, TX"
-            className="w-full rounded border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+            className={inputClass}
           />
         </div>
-        {prefsError && <p className="text-sm text-red-600">{prefsError}</p>}
+        {prefsError && <p className="text-sm text-danger">{prefsError}</p>}
         {profile && (
           <button
             type="button"
             onClick={handleSaveLocationPrefs}
             disabled={savingPrefs}
-            className="self-start rounded bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 px-4 py-2 text-sm font-medium disabled:opacity-50"
+            className={primaryButtonClass}
           >
             {savingPrefs ? "Saving..." : prefsSaved ? "Saved ✓" : "Save location preferences"}
           </button>
         )}
         {!profile && (
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-muted">
             These will be saved when you upload your profile above.
           </p>
         )}
       </div>
 
       {profile && (
-        <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 p-4">
-          <h2 className="font-medium mb-2">Structured profile</h2>
-          <dl className="text-sm space-y-2">
+        <div className={cardClass}>
+          <h2 className="font-medium">Structured profile</h2>
+          <dl className="text-sm space-y-3">
             <div>
-              <dt className="text-neutral-500">Seniority</dt>
+              <dt className="text-muted text-xs uppercase tracking-wide mb-0.5">Seniority</dt>
               <dd>{profile.structured_profile.seniority || "—"}</dd>
             </div>
             <div>
-              <dt className="text-neutral-500">Experience</dt>
+              <dt className="text-muted text-xs uppercase tracking-wide mb-0.5">Experience</dt>
               <dd>{profile.structured_profile.experience_years} years</dd>
             </div>
             <div>
-              <dt className="text-neutral-500">Skills</dt>
+              <dt className="text-muted text-xs uppercase tracking-wide mb-0.5">Skills</dt>
               <dd>{profile.structured_profile.skills.join(", ") || "—"}</dd>
             </div>
             <div>
-              <dt className="text-neutral-500">Domains</dt>
+              <dt className="text-muted text-xs uppercase tracking-wide mb-0.5">Domains</dt>
               <dd>{profile.structured_profile.domains.join(", ") || "—"}</dd>
             </div>
             <div>
-              <dt className="text-neutral-500">Summary</dt>
+              <dt className="text-muted text-xs uppercase tracking-wide mb-0.5">Summary</dt>
               <dd>{profile.structured_profile.summary || "—"}</dd>
             </div>
           </dl>

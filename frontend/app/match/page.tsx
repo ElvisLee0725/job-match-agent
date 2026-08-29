@@ -8,6 +8,17 @@ import {
   type MatchRunResponse,
 } from "@/lib/api";
 
+const inputClass =
+  "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm placeholder:text-muted/70 focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent transition-colors";
+const primaryButtonClass =
+  "rounded-lg bg-accent text-accent-foreground px-4 py-2 text-sm font-medium hover:bg-accent-hover transition-colors disabled:opacity-50 disabled:hover:bg-accent";
+
+function scoreClasses(score: number): string {
+  if (score >= 75) return "bg-success/15 text-success";
+  if (score >= 50) return "bg-warning/15 text-warning";
+  return "bg-danger/15 text-danger";
+}
+
 export default function MatchPage() {
   const [company, setCompany] = useState("oracle");
   const [topN, setTopN] = useState(3);
@@ -41,8 +52,8 @@ export default function MatchPage() {
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h1 className="text-2xl font-semibold">Your top matches</h1>
-        <p className="mt-2 text-neutral-600 dark:text-neutral-400 text-sm">
+        <h1 className="text-3xl font-semibold tracking-tight">Your top matches</h1>
+        <p className="mt-3 text-muted text-sm max-w-xl">
           Ranks your cached postings for a company against your profile and picks the best
           matches. Make sure you&apos;ve uploaded a profile and searched a company first.
         </p>
@@ -57,7 +68,7 @@ export default function MatchPage() {
             id="match_company"
             value={company}
             onChange={(e) => setCompany(e.target.value)}
-            className="w-full rounded border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+            className={inputClass}
           />
         </div>
         <div>
@@ -71,49 +82,47 @@ export default function MatchPage() {
             max={20}
             value={topN}
             onChange={(e) => setTopN(Math.max(1, Math.min(20, Number(e.target.value) || 1)))}
-            className="w-24 rounded border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+            className={`w-24 ${inputClass}`}
           />
         </div>
-        <button
-          type="submit"
-          disabled={running}
-          className="rounded bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 px-4 py-2 text-sm font-medium disabled:opacity-50"
-        >
+        <button type="submit" disabled={running} className={primaryButtonClass}>
           {running ? "Ranking..." : "Run match"}
         </button>
       </form>
-      {error && <p className="text-sm text-red-600 -mt-4">{error}</p>}
+      {error && <p className="text-sm text-danger -mt-4">{error}</p>}
 
       {loaded && !matchRun && (
-        <p className="text-sm text-neutral-500">No match run yet — click &quot;Run match&quot; above.</p>
+        <p className="text-sm text-muted">No match run yet — click &quot;Run match&quot; above.</p>
       )}
 
       {matchRun && (
         <div>
-          <p className="text-sm text-neutral-500 mb-3">
+          <p className="text-sm text-muted mb-3">
             Last run: {new Date(matchRun.run_at).toLocaleString()}
           </p>
           <ol className="flex flex-col gap-4">
             {matchRun.results.map((pick) => (
               <li
                 key={pick.job_posting_id}
-                className="rounded-lg border border-neutral-200 dark:border-neutral-800 p-4"
+                className="rounded-xl border border-border bg-surface p-5 hover:border-border-strong transition-colors"
               >
                 <div className="flex items-baseline justify-between gap-4">
                   <a
                     href={pick.source_url}
                     target="_blank"
                     rel="noreferrer"
-                    className="font-medium underline"
+                    className="font-medium text-accent hover:text-accent-hover transition-colors"
                   >
                     #{pick.rank} {pick.title}
                   </a>
-                  <span className="text-sm font-medium text-neutral-500 whitespace-nowrap">
+                  <span
+                    className={`text-xs font-semibold whitespace-nowrap rounded-full px-2.5 py-1 ${scoreClasses(pick.fit_score)}`}
+                  >
                     {pick.fit_score}/100
                   </span>
                 </div>
-                <p className="text-sm text-neutral-500">{pick.location ?? "Location not specified"}</p>
-                <p className="text-sm text-neutral-700 dark:text-neutral-300 mt-2">{pick.rationale}</p>
+                <p className="text-sm text-muted mt-0.5">{pick.location ?? "Location not specified"}</p>
+                <p className="text-sm mt-3 leading-relaxed">{pick.rationale}</p>
               </li>
             ))}
           </ol>
