@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
-/* Dark-first palette. Light mode is a secondary fallback via
-   prefers-color-scheme: light, rather than dark being the fallback. */
+/* Dark-first palette. :root defines dark as the default. Light applies either
+   via system preference (when the user hasn't made an explicit choice) or via
+   an explicit [data-theme] override set by the toggle in the header. */
 :root {
   --background: #0a0a0f;
   --surface: #14151d;
@@ -36,8 +37,9 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* System preference — only applies when there's no explicit [data-theme] override */
 @media (prefers-color-scheme: light) {
-  :root {
+  :root:not([data-theme="dark"]) {
     --background: #f7f7f9;
     --surface: #ffffff;
     --surface-hover: #f0f1f4;
@@ -52,6 +54,39 @@
     --warning: #b45309;
     --danger: #dc2626;
   }
+}
+
+/* Explicit override from the toggle — wins regardless of system preference */
+:root[data-theme="light"] {
+  --background: #f7f7f9;
+  --surface: #ffffff;
+  --surface-hover: #f0f1f4;
+  --border: #e3e4e9;
+  --border-strong: #cdced6;
+  --foreground: #16171c;
+  --muted: #6b6d78;
+  --accent: #5b5ff0;
+  --accent-hover: #4a4ee0;
+  --accent-foreground: #ffffff;
+  --success: #16a34a;
+  --warning: #b45309;
+  --danger: #dc2626;
+}
+
+:root[data-theme="dark"] {
+  --background: #0a0a0f;
+  --surface: #14151d;
+  --surface-hover: #1a1c26;
+  --border: #24262f;
+  --border-strong: #33353f;
+  --foreground: #e7e8ec;
+  --muted: #9a9ca8;
+  --accent: #7c8cff;
+  --accent-hover: #9aa6ff;
+  --accent-foreground: #0a0a0f;
+  --success: #4ade80;
+  --warning: #facc15;
+  --danger: #f87171;
 }
 
 body {
