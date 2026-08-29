@@ -10,6 +10,7 @@ import {
 
 export default function MatchPage() {
   const [company, setCompany] = useState("oracle");
+  const [topN, setTopN] = useState(3);
   const [matchRun, setMatchRun] = useState<MatchRunResponse | null>(null);
   const [running, setRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +29,7 @@ export default function MatchPage() {
     setRunning(true);
     setError(null);
     try {
-      const result = await runMatch({ company_name: company });
+      const result = await runMatch({ company_name: company, top_n: topN });
       setMatchRun(result);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Something went wrong.");
@@ -42,8 +43,8 @@ export default function MatchPage() {
       <div>
         <h1 className="text-2xl font-semibold">Your top matches</h1>
         <p className="mt-2 text-neutral-600 dark:text-neutral-400 text-sm">
-          Ranks your cached postings for a company against your profile and picks the top 3.
-          Make sure you&apos;ve uploaded a profile and searched a company first.
+          Ranks your cached postings for a company against your profile and picks the best
+          matches. Make sure you&apos;ve uploaded a profile and searched a company first.
         </p>
       </div>
 
@@ -57,6 +58,20 @@ export default function MatchPage() {
             value={company}
             onChange={(e) => setCompany(e.target.value)}
             className="w-full rounded border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1" htmlFor="match_top_n">
+            # of matches
+          </label>
+          <input
+            id="match_top_n"
+            type="number"
+            min={1}
+            max={20}
+            value={topN}
+            onChange={(e) => setTopN(Math.max(1, Math.min(20, Number(e.target.value) || 1)))}
+            className="w-24 rounded border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
           />
         </div>
         <button
