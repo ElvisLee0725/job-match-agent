@@ -26,11 +26,14 @@ def is_us_location(location: str | None) -> bool:
     return bool(_STATE_PATTERN.search(location.upper()))
 
 
-def extract_state_abbreviation(location: str | None) -> str | None:
+def extract_state_abbreviations(location: str | None) -> list[str]:
+    """Returns every state abbreviation mentioned in `location`, not just the first —
+    some postings (e.g. Oracle's own multi-location jobs) list more than one, and
+    matching only the first would wrongly drop a posting whose primary location isn't
+    preferred but whose secondary location is (see `passes_location_filter`)."""
     if not location:
-        return None
-    match = _STATE_PATTERN.search(location.upper())
-    return match.group(1) if match else None
+        return []
+    return _STATE_PATTERN.findall(location.upper())
 
 
 def passes_location_filter(
@@ -39,17 +42,19 @@ def passes_location_filter(
     """Hard location filter applied before ranking, not left to LLM judgment.
 
     - us_only excludes anything not identifiable as a US location.
-    - preferred_states excludes a posting only when it names a *specific* state that
-      isn't in the preferred list — a posting with an unqualified "United States"
-      location (often remote-eligible or multi-location) is kept rather than excluded,
-      since we can't tell it actually requires relocation.
+    - preferred_states excludes a posting only when it names specific states, NONE of
+      which are in the preferred list — a posting with an unqualified "United States"
+      location (often remote-eligible) is kept rather than excluded, since we can't tell
+      it actually requires relocation, and a multi-location posting passes if ANY of its
+      listed states is preferred, not just the first one mentioned.
     """
     if us_only and not is_us_location(location):
         return False
 
     if preferred_states:
-        state = extract_state_abbreviation(location)
-        if state is not None and state.upper() not in {s.upper() for s in preferred_states}:
+        states = extract_state_abbreviations(location)
+        preferred_upper = {s.upper() for s in preferred_states}
+        if states and not any(s in preferred_upper for s in states):
             return False
 
     return True

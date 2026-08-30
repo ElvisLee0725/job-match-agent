@@ -26,6 +26,18 @@ def extract_oracle_job_id(url: str) -> str | None:
     return match.group(1) if match else None
 
 
+def _combine_locations(item: dict) -> str | None:
+    """Oracle's detail endpoint (unlike the bulk search endpoint) reports every location a
+    posting is open in via `secondaryLocations`, not just `PrimaryLocation` — a job can be
+    "Seattle, WA" primary with "Santa Clara, CA" as a secondary location, for example.
+    Join them all into one string so the location filter can see every state mentioned,
+    not just the first."""
+    primary = item.get("PrimaryLocation")
+    secondary_names = [loc.get("Name") for loc in item.get("secondaryLocations") or [] if loc.get("Name")]
+    all_locations = [loc for loc in [primary, *secondary_names] if loc]
+    return "; ".join(all_locations) if all_locations else None
+
+
 def _sanitize_keyword(query: str) -> str:
     # `,` and `;` are the Oracle "finder" syntax's own delimiters — a literal one in the
     # search text would get parsed as part of the finder expression rather than the keyword.
@@ -44,6 +56,12 @@ class OracleJobSource(JobSource):
         return f"{_BASE_API_URL}/{resource}?onlyData=true&expand={expand}&finder={encoded_finder}"
 
     def search(self, query: str, limit: int = 100) -> list[ParsedJobPosting]:
+        # NOTE: Oracle's bulk search/list endpoint only reports PrimaryLocation — unlike
+        # the detail endpoint (see fetch_posting_by_id), it has no secondaryLocations field.
+        # Getting full multi-location data for every search result would need one extra
+        # detail call per posting (100+ per search) — not done here as a deliberate
+        # cost/complexity tradeoff. Postings added via "paste a URL" get full location data
+        # since that path already fetches the detail endpoint for other reasons.
         keyword = _sanitize_keyword(query)
         finder = f"findReqs;siteNumber={_SITE_NUMBER},limit={limit},offset=0,keyword={keyword}"
         url = self._finder_url("recruitingCEJobRequisitions", finder, expand="requisitionList")
@@ -94,6 +112,6 @@ class OracleJobSource(JobSource):
             source_url=source_url or _JOB_URL_TEMPLATE.format(id=external_id),
             external_id=external_id,
             title=item.get("Title", ""),
-            location=item.get("PrimaryLocation"),
+            location=_combine_locations(item),
             raw_description=strip_html(item.get("ExternalDescriptionStr")),
         )

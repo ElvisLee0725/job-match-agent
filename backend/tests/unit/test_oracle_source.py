@@ -75,6 +75,20 @@ def test_fetch_posting_by_id_returns_full_parsed_posting():
     assert "<p>" not in posting.raw_description
 
 
+@respx.mock
+def test_fetch_posting_by_id_combines_primary_and_secondary_locations():
+    # Confirmed with real Oracle data (requisition 334575): a posting can have a primary
+    # location plus one or more secondaryLocations that only the detail endpoint reports —
+    # both must end up in `location` or the location filter can't see the secondary state.
+    fixture = json.loads((FIXTURES / "oracle_detail_response.json").read_text())
+    respx.get(url__regex=DETAIL_URL_RE).mock(return_value=httpx.Response(200, json=fixture))
+
+    posting = OracleJobSource().fetch_posting_by_id("333297")
+
+    assert "Seattle, WA, United States" in posting.location
+    assert "Santa Clara, CA, United States" in posting.location
+
+
 def test_extract_oracle_job_id_matches_public_careers_url():
     assert (
         extract_oracle_job_id("https://careers.oracle.com/en/sites/jobsearch/job/334575")
