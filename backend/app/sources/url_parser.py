@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 from app.llm.client import structured_completion
 from app.models.job import ParsedJobPosting
+from app.sources.oracle import OracleJobSource, extract_oracle_job_id
 
 _PROMPT_TEMPLATE = """\
 Below is the extracted text of a single job posting web page. Pull out the job title, the \
@@ -46,6 +47,15 @@ class SingleUrlJobParser:
         )
 
     def parse(self, url: str, company: str) -> ParsedJobPosting:
+        # Oracle job links (either their public careers.oracle.com wrapper, or the
+        # underlying eeho.fa.us2.oraclecloud.com "Candidate Experience" URL people often
+        # copy/share directly) are JS-rendered SPAs a plain HTML fetch can't read. Since we
+        # already have a real API integration for Oracle, route these through it instead of
+        # the generic fetch-and-ask-Claude path — more reliable and doesn't need an LLM call.
+        oracle_job_id = extract_oracle_job_id(url)
+        if oracle_job_id:
+            return OracleJobSource().fetch_posting_by_id(oracle_job_id, source_url=url)
+
         response = self._client.get(url)
         response.raise_for_status()
 

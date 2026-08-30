@@ -11,6 +11,20 @@ _BASE_API_URL = "https://eeho.fa.us2.oraclecloud.com/hcmRestApi/resources/latest
 _SITE_NUMBER = "CX_45001"
 _JOB_URL_TEMPLATE = "https://careers.oracle.com/en/sites/jobsearch/job/{id}"
 
+# Matches both URL formats Oracle job postings show up in the wild: the public
+# careers.oracle.com wrapper, and the underlying eeho.fa.us2.oraclecloud.com "Candidate
+# Experience" app URL people often copy/share directly (e.g. from LinkedIn) — that one is a
+# JS-rendered SPA a plain HTTP fetch can't read, which is exactly why detecting it and
+# routing through this API instead matters (see SingleUrlJobParser).
+_ORACLE_JOB_URL_PATTERN = re.compile(
+    r"(?:careers\.oracle\.com|\.oraclecloud\.com)/.*?/jobsearch/job/(\d+)", re.IGNORECASE
+)
+
+
+def extract_oracle_job_id(url: str) -> str | None:
+    match = _ORACLE_JOB_URL_PATTERN.search(url)
+    return match.group(1) if match else None
+
 
 def _sanitize_keyword(query: str) -> str:
     # `,` and `;` are the Oracle "finder" syntax's own delimiters — a literal one in the
@@ -55,7 +69,7 @@ class OracleJobSource(JobSource):
             )
         return postings
 
-    def fetch_full_description(self, external_id: str) -> str:
+    def _fetch_detail_item(self, external_id: str) -> dict:
         finder = f'ById;Id="{external_id}",siteNumber={_SITE_NUMBER}'
         url = self._finder_url("recruitingCEJobRequisitionDetails", finder, expand="all")
 
@@ -64,4 +78,22 @@ class OracleJobSource(JobSource):
         data = response.json()
         if not data.get("items"):
             raise ValueError(f"No job details found for Oracle requisition id {external_id!r}")
-        return strip_html(data["items"][0].get("ExternalDescriptionStr"))
+        return data["items"][0]
+
+    def fetch_full_description(self, external_id: str) -> str:
+        item = self._fetch_detail_item(external_id)
+        return strip_html(item.get("ExternalDescriptionStr"))
+
+    def fetch_posting_by_id(self, external_id: str, source_url: str | None = None) -> ParsedJobPosting:
+        """Fetch a single posting directly by its Oracle requisition id — used when a user
+        pastes a specific Oracle job URL rather than searching."""
+        item = self._fetch_detail_item(external_id)
+        return ParsedJobPosting(
+            company=self.company_name,
+            source_type="scraped",
+            source_url=source_url or _JOB_URL_TEMPLATE.format(id=external_id),
+            external_id=external_id,
+            title=item.get("Title", ""),
+            location=item.get("PrimaryLocation"),
+            raw_description=strip_html(item.get("ExternalDescriptionStr")),
+        )
