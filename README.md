@@ -6,8 +6,11 @@ A personal tool that takes your resume, background, and behavioral-interview ans
 searches a target company's real open roles, and ranks the top 3 that best fit your
 profile — with a plain-language explanation of why.
 
-Currently supports **Oracle** (via their real Recruiting Cloud search API) plus a
-generic "paste a job URL" flow for any single posting (e.g. a LinkedIn link).
+Currently supports **Oracle** (via their real Recruiting Cloud API), any company on
+**Greenhouse** or **Lever** (auto-detected by name), plus a "paste a job URL" flow for any
+single posting (e.g. a LinkedIn link).
+
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for the reasoning behind key design decisions.
 
 ## How it works
 
