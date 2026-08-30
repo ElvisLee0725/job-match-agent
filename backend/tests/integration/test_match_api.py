@@ -54,6 +54,15 @@ class _FakeOracleSource:
                 location="United States",
                 raw_description="Lead backend architecture decisions.",
             ),
+            ParsedJobPosting(
+                company="oracle",
+                source_type="scraped",
+                source_url="https://careers.oracle.com/en/sites/jobsearch/job/6",
+                external_id="6",
+                title="Remote Backend Engineer",
+                location="Remote",
+                raw_description="Fully remote backend role, no country specified.",
+            ),
         ]
 
     def fetch_full_description(self, external_id):
@@ -159,6 +168,27 @@ def test_run_match_excludes_postings_outside_preferred_states(client, monkeypatc
     assert "Backend Engineer (Nashville)" not in titles  # TN, not in preferred states
     assert "Backend Engineer" in titles  # Austin, TX — matches preferred state
     assert "Data Scientist" in titles  # unqualified "United States" — kept, not assumed to need relocation
+    assert "Remote Backend Engineer" in titles  # remote is always included, regardless of state prefs
+
+
+def test_run_match_always_includes_remote_postings(client, monkeypatch):
+    _seed_profile(client, monkeypatch)
+    _seed_jobs(client, monkeypatch)
+
+    client.put("/api/profile", json={"us_only": True, "preferred_states": ["CA"]})
+
+    seen_candidates = []
+
+    def _capture_rank_top_matches(profile, candidates, top_n=3):
+        seen_candidates.extend(candidates)
+        return []
+
+    monkeypatch.setattr(match_router, "rank_top_matches", _capture_rank_top_matches)
+
+    client.post("/api/match/run", json={"company_name": "oracle"})
+
+    titles = {c.title for c in seen_candidates}
+    assert "Remote Backend Engineer" in titles
 
 
 def test_run_match_excludes_postings_matching_excluded_title_keywords(client, monkeypatch):

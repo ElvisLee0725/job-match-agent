@@ -1,5 +1,6 @@
 from app.services.location_filter import (
     extract_state_abbreviations,
+    is_remote_location,
     is_us_location,
     passes_location_filter,
 )
@@ -78,3 +79,24 @@ def test_passes_location_filter_keeps_multi_location_posting_if_any_state_is_pre
 def test_passes_location_filter_excludes_multi_location_posting_if_no_state_is_preferred():
     location = "Seattle, WA, United States; Nashville, TN, United States"
     assert passes_location_filter(location, us_only=True, preferred_states=["CA"]) is False
+
+
+def test_is_remote_location():
+    assert is_remote_location("Remote") is True
+    assert is_remote_location("US Remote") is True
+    assert is_remote_location("Remote - US") is True
+    assert is_remote_location("Austin, TX, United States") is False
+    assert is_remote_location(None) is False
+
+
+def test_passes_location_filter_always_includes_remote_regardless_of_us_only():
+    # A bare "Remote" location (real format from Lever's own API) has no country/state
+    # info at all, so is_us_location can't identify it as US-based — before this fix that
+    # meant it was silently excluded under us_only=True, even though most remote postings
+    # from US-headquartered companies are exactly what a US-only searcher wants to see.
+    assert passes_location_filter("Remote", us_only=True, preferred_states=[]) is True
+
+
+def test_passes_location_filter_always_includes_remote_regardless_of_preferred_states():
+    assert passes_location_filter("Remote", us_only=True, preferred_states=["CA"]) is True
+    assert passes_location_filter("US Remote", us_only=True, preferred_states=["TX"]) is True

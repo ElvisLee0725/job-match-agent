@@ -14,6 +14,13 @@ _US_STATE_ABBREVIATIONS = {
 # platforms — not just the one it was originally written against.
 _US_TOKEN_PATTERN = re.compile(r"\b(?:US|USA)\b")
 _STATE_PATTERN = re.compile(r"\b(" + "|".join(sorted(_US_STATE_ABBREVIATIONS)) + r")\b")
+_REMOTE_TOKEN_PATTERN = re.compile(r"\bremote\b", re.IGNORECASE)
+
+
+def is_remote_location(location: str | None) -> bool:
+    if not location:
+        return False
+    return bool(_REMOTE_TOKEN_PATTERN.search(location))
 
 
 def is_us_location(location: str | None) -> bool:
@@ -41,6 +48,10 @@ def passes_location_filter(
 ) -> bool:
     """Hard location filter applied before ranking, not left to LLM judgment.
 
+    - Remote postings are always included by default, bypassing both us_only and
+      preferred_states — a location naming "remote" (in any format: "Remote", "US
+      Remote", "Remote - US") is kept regardless of other settings, since remote roles
+      are typically open regardless of specific physical location.
     - us_only excludes anything not identifiable as a US location.
     - preferred_states excludes a posting only when it names specific states, NONE of
       which are in the preferred list — a posting with an unqualified "United States"
@@ -48,6 +59,9 @@ def passes_location_filter(
       it actually requires relocation, and a multi-location posting passes if ANY of its
       listed states is preferred, not just the first one mentioned.
     """
+    if is_remote_location(location):
+        return True
+
     if us_only and not is_us_location(location):
         return False
 
