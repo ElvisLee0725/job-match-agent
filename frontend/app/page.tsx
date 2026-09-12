@@ -41,6 +41,9 @@ export default function OverviewPage() {
           Upload your background once, then search a company&apos;s open roles and get your
           best-fitting positions, ranked with a plain-language explanation of why.
         </p>
+        <p className="mt-2 text-muted max-w-xl">
+          Follow the 1, 2, 3 steps below to get your best job matches to apply for.
+        </p>
       </div>
 
       <div className="grid gap-4">
@@ -51,6 +54,10 @@ export default function OverviewPage() {
             </span>
             <h2 className="font-medium">Your profile</h2>
           </div>
+          <p className="text-sm text-muted pl-7 mb-2">
+            Upload a resume (.pdf or .txt) plus background notes and a few sample behavioral
+            answers. Claude structures it into skills, seniority, and domains used for matching.
+          </p>
           {profile === undefined && <p className="text-sm text-muted pl-7">Checking...</p>}
           {profile === null && (
             <p className="text-sm text-muted pl-7">
