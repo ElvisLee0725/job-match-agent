@@ -11,6 +11,7 @@
     "text": "Senior Backend Software Engineer",
     "hostedUrl": "https://jobs.lever.co/example/b1111111",
     "categories": { "location": "New York" },
+    "createdAt": 1753660800000,
     "descriptionPlain": "Build distributed backend systems handling large-scale data pipelines."
   },
   {

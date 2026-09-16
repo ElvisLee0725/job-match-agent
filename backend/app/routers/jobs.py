@@ -36,6 +36,7 @@ def _to_response(posting: JobPosting) -> JobPostingResponse:
         location=posting.location,
         raw_description=posting.raw_description,
         structured=JobStructuredData.model_validate_json(posting.structured_json),
+        posted_at=posting.posted_at,
         scraped_at=posting.scraped_at,
     )
 
@@ -52,6 +53,7 @@ def _upsert(db: Session, parsed: ParsedJobPosting) -> JobPosting:
     existing.title = parsed.title
     existing.location = parsed.location
     existing.raw_description = parsed.raw_description
+    existing.posted_at = parsed.posted_at
     return existing
 
 

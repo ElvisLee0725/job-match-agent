@@ -39,6 +39,7 @@ class JobPosting(Base):
     location: Mapped[str | None] = mapped_column(String(256), nullable=True)
     raw_description: Mapped[str] = mapped_column(Text, default="")
     structured_json: Mapped[str] = mapped_column(Text, default="{}")
+    posted_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     scraped_at: Mapped[datetime] = mapped_column(DateTime, default=_utcnow)
 
 

@@ -38,6 +38,7 @@ export interface JobPostingResponse {
   location: string | null;
   raw_description: string;
   structured: JobStructuredData;
+  posted_at: string | null;
   scraped_at: string;
 }
 
@@ -50,6 +51,7 @@ export interface MatchPickResponse {
   company: string;
   location: string | null;
   source_url: string;
+  posted_at: string | null;
 }
 
 export interface MatchRunResponse {

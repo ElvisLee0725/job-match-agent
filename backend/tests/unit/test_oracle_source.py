@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import unquote
 
@@ -26,6 +27,7 @@ def test_search_parses_requisitions_into_parsed_job_postings():
     assert first.source_url.startswith("https://careers.oracle.com/en/sites/jobsearch/job/")
     assert first.external_id
     assert first.title
+    assert first.posted_at == datetime(2026, 8, 19)
 
 
 @respx.mock
@@ -73,6 +75,7 @@ def test_fetch_posting_by_id_returns_full_parsed_posting():
     assert posting.source_url == "https://careers.oracle.com/en/sites/jobsearch/job/333297"
     assert posting.title
     assert "<p>" not in posting.raw_description
+    assert posting.posted_at == datetime(2026, 8, 21, 15, 46, 7, tzinfo=timezone.utc)
 
 
 @respx.mock
@@ -87,6 +90,21 @@ def test_fetch_posting_by_id_combines_primary_and_secondary_locations():
 
     assert "Seattle, WA, United States" in posting.location
     assert "Santa Clara, CA, United States" in posting.location
+
+
+@respx.mock
+def test_check_exists_returns_true_when_detail_lookup_succeeds():
+    fixture = json.loads((FIXTURES / "oracle_detail_response.json").read_text())
+    respx.get(url__regex=DETAIL_URL_RE).mock(return_value=httpx.Response(200, json=fixture))
+
+    assert OracleJobSource().check_exists("333297") is True
+
+
+@respx.mock
+def test_check_exists_returns_false_when_requisition_no_longer_exists():
+    respx.get(url__regex=DETAIL_URL_RE).mock(return_value=httpx.Response(200, json={"items": []}))
+
+    assert OracleJobSource().check_exists("999999") is False
 
 
 def test_extract_oracle_job_id_matches_public_careers_url():

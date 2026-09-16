@@ -12,6 +12,7 @@ class ParsedJobPosting(BaseModel):
     title: str
     location: str | None = None
     raw_description: str
+    posted_at: datetime | None = None
 
 
 class JobStructuredData(BaseModel):
@@ -31,4 +32,5 @@ class JobPostingResponse(BaseModel):
     location: str | None
     raw_description: str
     structured: JobStructuredData
+    posted_at: datetime | None
     scraped_at: datetime

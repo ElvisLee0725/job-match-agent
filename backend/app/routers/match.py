@@ -7,9 +7,11 @@ from app.db.database import get_db
 from app.db.models import JobPosting, MatchResult, Profile
 from app.models.match import MatchPickResponse, MatchRunRequest, MatchRunResponse
 from app.models.profile import StructuredProfile
+from app.services.liveness_filter import filter_still_live
 from app.services.location_filter import passes_location_filter
 from app.services.matching import JobCandidate, rank_top_matches
 from app.services.title_filter import passes_title_filter
+from app.sources.registry import UnsupportedCompanyError, get_source
 
 router = APIRouter(prefix="/api/match", tags=["match"])
 
@@ -29,11 +31,22 @@ def run_match(payload: MatchRunRequest, db: Session = Depends(get_db)) -> MatchR
             detail=f"No cached postings for '{company}' — run /api/jobs/scrape first.",
         )
 
+    try:
+        source = get_source(company)
+    except UnsupportedCompanyError:
+        source = None
+    live_postings = filter_still_live(all_postings, source)
+    stale_postings = [p for p in all_postings if p not in live_postings]
+    for stale in stale_postings:
+        db.delete(stale)
+    if stale_postings:
+        db.commit()
+
     preferred_states = json.loads(profile.preferred_states_json)
     excluded_title_keywords = json.loads(profile.excluded_title_keywords_json)
     postings = [
         p
-        for p in all_postings
+        for p in live_postings
         if passes_location_filter(
             p.location, us_only=profile.us_only, preferred_states=preferred_states
         )
@@ -42,8 +55,9 @@ def run_match(payload: MatchRunRequest, db: Session = Depends(get_db)) -> MatchR
     if not postings:
         raise HTTPException(
             status_code=400,
-            detail=f"None of the {len(all_postings)} cached postings for '{company}' match "
-            "your location and title preferences — try broadening them or searching again.",
+            detail=f"None of the {len(live_postings)} still-live cached postings for "
+            f"'{company}' match your location and title preferences — try broadening them "
+            "or searching again.",
         )
 
     structured_profile = StructuredProfile.model_validate_json(profile.structured_json)
@@ -70,6 +84,7 @@ def run_match(payload: MatchRunRequest, db: Session = Depends(get_db)) -> MatchR
             company=postings_by_id[pick.job_posting_id].company,
             location=postings_by_id[pick.job_posting_id].location,
             source_url=postings_by_id[pick.job_posting_id].source_url,
+            posted_at=postings_by_id[pick.job_posting_id].posted_at,
         )
         for pick in picks
     ]

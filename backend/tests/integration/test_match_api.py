@@ -68,6 +68,9 @@ class _FakeOracleSource:
     def fetch_full_description(self, external_id):
         return "full description"
 
+    def check_exists(self, external_id):
+        return True
+
 
 def _seed_profile(client, monkeypatch) -> None:
     monkeypatch.setattr(
@@ -86,6 +89,7 @@ def _seed_profile(client, monkeypatch) -> None:
 
 def _seed_jobs(client, monkeypatch) -> None:
     monkeypatch.setattr(jobs_router, "get_source", lambda company_name: _FakeOracleSource())
+    monkeypatch.setattr(match_router, "get_source", lambda company_name: _FakeOracleSource())
     client.post("/api/jobs/scrape", json={"company_name": "oracle", "query": "backend"})
 
 
@@ -230,6 +234,39 @@ def test_run_match_includes_principal_title_when_no_exclusion_set(client, monkey
     assert "Principal Backend Engineer" in titles
 
 
+def test_run_match_drops_stale_postings_and_removes_them_from_cache(client, monkeypatch):
+    # Regression test: a posting that was cached weeks ago can be closed/filled at the
+    # source by the time a match runs — it must not be recommended, and shouldn't linger
+    # in the cache for future runs or the Jobs list either.
+    class _SourceWithOneDeadPosting(_FakeOracleSource):
+        def check_exists(self, external_id):
+            return external_id != "3"  # "Backend Engineer (India)" (id=3) has been removed
+
+    _seed_profile(client, monkeypatch)
+    monkeypatch.setattr(jobs_router, "get_source", lambda company_name: _FakeOracleSource())
+    monkeypatch.setattr(
+        match_router, "get_source", lambda company_name: _SourceWithOneDeadPosting()
+    )
+    client.post("/api/jobs/scrape", json={"company_name": "oracle", "query": "backend"})
+
+    seen_candidates = []
+
+    def _capture_rank_top_matches(profile, candidates, top_n=3):
+        seen_candidates.extend(candidates)
+        return []
+
+    monkeypatch.setattr(match_router, "rank_top_matches", _capture_rank_top_matches)
+
+    client.post("/api/match/run", json={"company_name": "oracle"})
+
+    titles = {c.title for c in seen_candidates}
+    assert "Backend Engineer (India)" not in titles
+    assert "Backend Engineer" in titles
+
+    remaining = client.get("/api/jobs", params={"company": "oracle"}).json()
+    assert "Backend Engineer (India)" not in {j["title"] for j in remaining}
+
+
 def test_run_match_returns_400_when_all_postings_filtered_out_by_location(client, monkeypatch):
     class _AllInternationalSource:
         def search(self, query, limit=100):
@@ -248,8 +285,12 @@ def test_run_match_returns_400_when_all_postings_filtered_out_by_location(client
         def fetch_full_description(self, external_id):
             return "full description"
 
+        def check_exists(self, external_id):
+            return True
+
     _seed_profile(client, monkeypatch)
     monkeypatch.setattr(jobs_router, "get_source", lambda company_name: _AllInternationalSource())
+    monkeypatch.setattr(match_router, "get_source", lambda company_name: _AllInternationalSource())
     client.post("/api/jobs/scrape", json={"company_name": "oracle", "query": "backend"})
 
     resp = client.post("/api/match/run", json={"company_name": "oracle"})

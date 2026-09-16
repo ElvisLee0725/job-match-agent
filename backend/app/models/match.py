@@ -12,6 +12,7 @@ class MatchPickResponse(BaseModel):
     company: str
     location: str | None
     source_url: str
+    posted_at: datetime | None
 
 
 class MatchRunResponse(BaseModel):

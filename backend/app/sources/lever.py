@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 import httpx
 
 from app.models.job import ParsedJobPosting
@@ -5,6 +7,15 @@ from app.sources.base import JobSource
 from app.sources.keyword_filter import filter_and_rank_by_keyword
 
 _BASE_URL = "https://api.lever.co/v0/postings"
+
+
+def _parse_lever_date(value: int | None) -> datetime | None:
+    if not value:
+        return None
+    try:
+        return datetime.fromtimestamp(value / 1000, tz=timezone.utc)
+    except (ValueError, OSError, OverflowError):
+        return None
 
 
 class LeverJobSource(JobSource):
@@ -43,6 +54,7 @@ class LeverJobSource(JobSource):
                     title=posting.get("text", ""),
                     location=categories.get("location"),
                     raw_description=posting.get("descriptionPlain", ""),
+                    posted_at=_parse_lever_date(posting.get("createdAt")),
                 )
             )
         return postings
@@ -54,3 +66,12 @@ class LeverJobSource(JobSource):
         response.raise_for_status()
         data = response.json()
         return data.get("descriptionPlain", "")
+
+    def check_exists(self, external_id: str) -> bool:
+        response = self._client.get(
+            f"{_BASE_URL}/{self._company_slug}/{external_id}", params={"mode": "json"}
+        )
+        if response.status_code != 200:
+            return False
+        data = response.json()
+        return isinstance(data, dict) and data.get("ok") is not False

@@ -19,6 +19,14 @@ function scoreClasses(score: number): string {
   return "bg-danger/15 text-danger";
 }
 
+function formatPostedAt(postedAt: string | null): string | null {
+  if (!postedAt) return null;
+  const days = Math.floor((Date.now() - new Date(postedAt).getTime()) / 86_400_000);
+  if (days <= 0) return "Posted today";
+  if (days === 1) return "Posted 1 day ago";
+  return `Posted ${days} days ago`;
+}
+
 export default function MatchPage() {
   const [company, setCompany] = useState("oracle");
   const [topN, setTopN] = useState(3);
@@ -121,7 +129,12 @@ export default function MatchPage() {
                     {pick.fit_score}/100
                   </span>
                 </div>
-                <p className="text-sm text-muted mt-0.5">{pick.location ?? "Location not specified"}</p>
+                <p className="text-sm text-muted mt-0.5">
+                  {pick.location ?? "Location not specified"}
+                  {formatPostedAt(pick.posted_at) && (
+                    <> &middot; {formatPostedAt(pick.posted_at)}</>
+                  )}
+                </p>
                 <p className="text-sm mt-3 leading-relaxed">{pick.rationale}</p>
               </li>
             ))}

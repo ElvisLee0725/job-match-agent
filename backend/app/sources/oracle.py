@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 from urllib.parse import quote
 
 import httpx
@@ -36,6 +37,15 @@ def _combine_locations(item: dict) -> str | None:
     secondary_names = [loc.get("Name") for loc in item.get("secondaryLocations") or [] if loc.get("Name")]
     all_locations = [loc for loc in [primary, *secondary_names] if loc]
     return "; ".join(all_locations) if all_locations else None
+
+
+def _parse_oracle_date(value: str | None) -> datetime | None:
+    if not value:
+        return None
+    try:
+        return datetime.fromisoformat(value)
+    except ValueError:
+        return None
 
 
 def _sanitize_keyword(query: str) -> str:
@@ -83,6 +93,7 @@ class OracleJobSource(JobSource):
                     title=req.get("Title", ""),
                     location=req.get("PrimaryLocation"),
                     raw_description=strip_html(req.get("ShortDescriptionStr")),
+                    posted_at=_parse_oracle_date(req.get("PostedDate")),
                 )
             )
         return postings
@@ -102,6 +113,13 @@ class OracleJobSource(JobSource):
         item = self._fetch_detail_item(external_id)
         return strip_html(item.get("ExternalDescriptionStr"))
 
+    def check_exists(self, external_id: str) -> bool:
+        try:
+            self._fetch_detail_item(external_id)
+            return True
+        except (ValueError, httpx.HTTPStatusError):
+            return False
+
     def fetch_posting_by_id(self, external_id: str, source_url: str | None = None) -> ParsedJobPosting:
         """Fetch a single posting directly by its Oracle requisition id — used when a user
         pastes a specific Oracle job URL rather than searching."""
@@ -114,4 +132,5 @@ class OracleJobSource(JobSource):
             title=item.get("Title", ""),
             location=_combine_locations(item),
             raw_description=strip_html(item.get("ExternalDescriptionStr")),
+            posted_at=_parse_oracle_date(item.get("ExternalPostedStartDate")),
         )

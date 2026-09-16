@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 
 import httpx
@@ -26,6 +27,7 @@ def test_search_filters_by_keyword_and_maps_fields():
     assert posting.external_id == "7500001"
     assert posting.location == "Remote - US"
     assert posting.source_url == "https://stripe.com/jobs/search?gh_jid=7500001"
+    assert posting.posted_at == datetime(2026, 7, 28, 5, 0, 0, tzinfo=timezone.utc)
 
 
 @respx.mock
@@ -51,3 +53,21 @@ def test_fetch_full_description_strips_html():
 
     assert "<p>" not in description
     assert "Senior Backend Engineer" in description
+
+
+@respx.mock
+def test_check_exists_returns_true_for_200_response():
+    respx.get("https://boards-api.greenhouse.io/v1/boards/stripe/jobs/7500001").mock(
+        return_value=httpx.Response(200, json={"id": 7500001})
+    )
+
+    assert GreenhouseJobSource("stripe").check_exists("7500001") is True
+
+
+@respx.mock
+def test_check_exists_returns_false_for_404_response():
+    respx.get("https://boards-api.greenhouse.io/v1/boards/stripe/jobs/999999").mock(
+        return_value=httpx.Response(404)
+    )
+
+    assert GreenhouseJobSource("stripe").check_exists("999999") is False

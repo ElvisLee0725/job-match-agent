@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import httpx
 
 from app.models.job import ParsedJobPosting
@@ -6,6 +8,15 @@ from app.sources.html_utils import strip_html
 from app.sources.keyword_filter import filter_and_rank_by_keyword
 
 _BASE_URL = "https://boards-api.greenhouse.io/v1/boards"
+
+
+def _parse_greenhouse_date(value: str | None) -> datetime | None:
+    if not value:
+        return None
+    try:
+        return datetime.fromisoformat(value)
+    except ValueError:
+        return None
 
 
 class GreenhouseJobSource(JobSource):
@@ -42,6 +53,7 @@ class GreenhouseJobSource(JobSource):
                     title=job.get("title", ""),
                     location=location.get("name"),
                     raw_description="",
+                    posted_at=_parse_greenhouse_date(job.get("first_published")),
                 )
             )
         return postings
@@ -52,3 +64,8 @@ class GreenhouseJobSource(JobSource):
         response.raise_for_status()
         data = response.json()
         return strip_html(data.get("content"))
+
+    def check_exists(self, external_id: str) -> bool:
+        url = f"{_BASE_URL}/{self._board_token}/jobs/{external_id}"
+        response = self._client.get(url)
+        return response.status_code == 200

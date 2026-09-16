@@ -24,3 +24,12 @@ class JobSource(ABC):
         Used to enrich only the final shortlisted postings, since search results only
         carry a short snippet.
         """
+
+    @abstractmethod
+    def check_exists(self, external_id: str) -> bool:
+        """Return whether a posting is still live at the source, by its external id.
+
+        Cached postings can go stale — a company closes or fills a role days or weeks
+        after we scraped it — so this is used to filter cached candidates right before
+        matching, rather than trusting the cache indefinitely.
+        """
